@@ -1,0 +1,24 @@
+diff --git a/node_modules/react-native-crypto/index.js b/node_modules/react-native-crypto/index.js
+index f644543..e2ff55a 100644
+--- a/node_modules/react-native-crypto/index.js
++++ b/node_modules/react-native-crypto/index.js
+@@ -1,7 +1,17 @@
+ 'use strict'
+ 
+-import { randomBytes } from 'react-native-randombytes'
+-exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = randomBytes
++import { Buffer } from 'buffer';
++const { NativeModules } = require('react-native');
++
++const randomBytes = (size) => {
++  if (NativeModules.RNGetRandomValues) {
++    return Buffer(NativeModules.RNGetRandomValues.getRandomBase64(size));
++  } else {
++    throw new Error('Native module not found')
++  }
++};
++
++exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = randomBytes;
+ 
+ // implement window.getRandomValues(), for packages that rely on it
+ if (typeof window === 'object') {
